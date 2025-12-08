@@ -48,3 +48,12 @@ def create_post_analytics(db: Session, post_id: int, likes: int, comments: int, 
     db.commit()
     db.refresh(analytics)
     return analytics
+
+
+def get_all_posts_with_analytics(db: Session, user_id: int):
+    return (
+        db.query(models.PostAnalytics)
+        .join(models.SocialAccount)
+        .filter(models.SocialAccount.user_id == user_id)
+        .all()
+    )
