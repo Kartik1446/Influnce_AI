@@ -9,7 +9,6 @@ from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
-from sqlalchemy import inspect as sa_inspect
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
@@ -64,13 +63,8 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_post_analytics_id'), 'post_analytics', ['id'], unique=False)
-    # Drop legacy raw tables if they exist (fresh DBs will not have these)
-    bind = op.get_bind()
-    inspector = sa_inspect(bind)
-    if inspector.has_table('raw_instagram_posts'):
-        op.drop_table('raw_instagram_posts')
-    if inspector.has_table('raw_youtube_stats'):
-        op.drop_table('raw_youtube_stats')
+    op.drop_table('raw_instagram_posts')
+    op.drop_table('raw_youtube_stats')
     op.alter_column('user_tokens', 'access_token',
                existing_type=sa.TEXT(),
                type_=sa.String(),
