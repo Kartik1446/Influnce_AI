@@ -22,7 +22,7 @@ services:
     volumes:
       - ./backend:/app/backend
     environment:
-      - DATABASE_URL=postgresql+psycopg2://influnce:influnce_password@postgres:5432/influnce_ai
+      - DATABASE_URL=postgresql://neondb_owner:npg_i91fqJWvEFyx@ep-lingering-bird-a1svfhr7-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
       - REDIS_URL=redis://redis:6379/0
       - FACEBOOK_APP_ID=${FACEBOOK_APP_ID}
       - FACEBOOK_APP_SECRET=${FACEBOOK_APP_SECRET}
@@ -35,8 +35,7 @@ services:
       - TWITTER_REDIRECT_URI=${TWITTER_REDIRECT_URI}
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
     depends_on:
-      postgres:
-        condition: service_healthy
+
       redis:
         condition: service_healthy
 

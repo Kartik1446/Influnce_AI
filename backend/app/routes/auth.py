@@ -94,12 +94,13 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
 @router.get('/instagram')
 def instagram_auth():
     """Initiate Instagram OAuth flow (via Facebook Graph API)"""
-    app_id = os.getenv("FACEBOOK_APP_ID")
+    app_id = os.getenv("INSTAGRAM_APP_ID")
     redirect = os.getenv("INSTAGRAM_REDIRECT_URI")
     state = "random_state_string"  # Should be randomized per request
     
     # Scopes required for Instagram Graph API
-    scope = "instagram_basic,instagram_manage_insights,pages_show_list,pages_read_engagement"
+    # scope = "instagram_basic,instagram_manage_insights,pages_show_list,pages_read_engagement"
+    scope = "public_profile,email"
     
     auth_url = (
         f"https://www.facebook.com/v18.0/dialog/oauth?"
@@ -114,8 +115,8 @@ def instagram_auth():
 @router.get('/instagram/callback')
 async def instagram_callback(code: str, db: Session = Depends(get_db)):
     """Handle Instagram OAuth callback"""
-    app_id = os.getenv("FACEBOOK_APP_ID")
-    secret = os.getenv("FACEBOOK_APP_SECRET")
+    app_id = os.getenv("INSTAGRAM_APP_ID")
+    secret = os.getenv("INSTAGRAM_SECRET")
     redirect = os.getenv("INSTAGRAM_REDIRECT_URI")
     
     async with httpx.AsyncClient() as client:

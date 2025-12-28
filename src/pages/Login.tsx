@@ -190,7 +190,21 @@ export default function Login() {
                             Connect with your social accounts
                         </p>
                         <div className="grid grid-cols-3 gap-3">
-                            <button className="flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 rounded-xl hover:bg-gradient-to-br hover:from-purple-50 hover:to-pink-50 hover:border-purple-300 transition-all group">
+                            <button
+                                onClick={async () => {
+                                    try {
+                                        // Use full URL if not proxied, or rely on auth store
+                                        const response = await fetch('http://localhost:8000/auth/instagram');
+                                        const data = await response.json();
+                                        if (data.auth_url) {
+                                            window.location.href = data.auth_url;
+                                        }
+                                    } catch (e) {
+                                        console.error("Auth error", e);
+                                    }
+                                }}
+                                className="flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 rounded-xl hover:bg-gradient-to-br hover:from-purple-50 hover:to-pink-50 hover:border-purple-300 transition-all group"
+                            >
                                 <Instagram className="w-5 h-5 text-pink-600 group-hover:scale-110 transition-transform" />
                             </button>
                             <button className="flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 rounded-xl hover:bg-gradient-to-br hover:from-blue-50 hover:to-cyan-50 hover:border-blue-300 transition-all group">
