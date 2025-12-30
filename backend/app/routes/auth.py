@@ -19,7 +19,6 @@ def get_db():
     finally:
         db.close()
 
-# ==================== User Registration/Login ====================
 
 class UserCreate(BaseModel):
     username: str
@@ -96,12 +95,11 @@ def instagram_auth():
     """Initiate Instagram OAuth flow (via Facebook Graph API)"""
     app_id = os.getenv("INSTAGRAM_APP_ID")
     redirect = os.getenv("INSTAGRAM_REDIRECT_URI")
-    state = "random_state_string"  # Should be randomized per request
-    
+    state = "random_state_string"  # TODO: randomize per request and persist
+
     # Scopes required for Instagram Graph API
-    # scope = "instagram_basic,instagram_manage_insights,pages_show_list,pages_read_engagement"
-    scope = "public_profile,email"
-    
+    scope = "instagram_basic,instagram_manage_insights,pages_show_list,pages_read_engagement"
+
     auth_url = (
         f"https://www.facebook.com/v18.0/dialog/oauth?"
         f"client_id={app_id}&"
@@ -110,7 +108,7 @@ def instagram_auth():
         f"scope={scope}&"
         f"response_type=code"
     )
-    return {"auth_url": auth_url}
+    return RedirectResponse(url=auth_url)
 
 @router.get('/instagram/callback')
 async def instagram_callback(code: str, db: Session = Depends(get_db)):
@@ -194,12 +192,12 @@ def youtube_auth():
     """Initiate YouTube OAuth flow"""
     client_id = os.getenv("GOOGLE_CLIENT_ID")
     redirect_uri = os.getenv("GOOGLE_REDIRECT_URI")
-    
+
     scope = (
         "https://www.googleapis.com/auth/youtube.readonly "
         "https://www.googleapis.com/auth/yt-analytics.readonly"
     )
-    
+
     auth_url = (
         f"https://accounts.google.com/o/oauth2/v2/auth?"
         f"client_id={client_id}&"
@@ -209,8 +207,8 @@ def youtube_auth():
         f"access_type=offline&"
         f"prompt=consent"
     )
-    
-    return {"auth_url": auth_url}
+
+    return RedirectResponse(url=auth_url)
 
 @router.get('/youtube/callback')
 async def youtube_callback(code: str, db: Session = Depends(get_db)):
@@ -286,10 +284,10 @@ def twitter_auth():
     """Initiate Twitter OAuth 2.0 flow"""
     client_id = os.getenv("TWITTER_CLIENT_ID")
     redirect_uri = os.getenv("TWITTER_REDIRECT_URI")
-    
+
     state = "random_state_string"
     scope = "tweet.read users.read offline.access"
-    
+
     auth_url = (
         f"https://twitter.com/i/oauth2/authorize?"
         f"response_type=code&"
@@ -300,8 +298,8 @@ def twitter_auth():
         f"code_challenge=challenge&"
         f"code_challenge_method=plain"
     )
-    
-    return {"auth_url": auth_url}
+
+    return RedirectResponse(url=auth_url)
 
 @router.get('/twitter/callback')
 async def twitter_callback(code: str, state: str, db: Session = Depends(get_db)):
