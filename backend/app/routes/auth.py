@@ -93,7 +93,6 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
 @router.get('/instagram')
 def instagram_auth():
     """Initiate Instagram OAuth flow (via Facebook Graph API)"""
-    # Align env var names with .env.example
     app_id = os.getenv("INSTAGRAM_APP_ID")
     redirect = os.getenv("INSTAGRAM_REDIRECT_URI")
     state = "random_state_string"  # TODO: randomize per request and persist
@@ -114,8 +113,8 @@ def instagram_auth():
 @router.get('/instagram/callback')
 async def instagram_callback(code: str, db: Session = Depends(get_db)):
     """Handle Instagram OAuth callback"""
-    app_id = os.getenv("FACEBOOK_APP_ID")
-    secret = os.getenv("FACEBOOK_APP_SECRET")
+    app_id = os.getenv("INSTAGRAM_APP_ID")
+    secret = os.getenv("INSTAGRAM_SECRET")
     redirect = os.getenv("INSTAGRAM_REDIRECT_URI")
     
     async with httpx.AsyncClient() as client:

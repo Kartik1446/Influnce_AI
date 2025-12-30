@@ -5,3 +5,7 @@ fastapi~=0.121.1
 psycopg2-binary~=2.9.11
 perfect~=0.0.1
 etl~=0.0.1
+passlib[bcrypt]
+python-jose[cryptography]
+python-dotenv
+uvicorn

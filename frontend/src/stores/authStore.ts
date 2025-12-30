@@ -52,7 +52,7 @@ interface AuthState {
 // ==================== Configuration ====================
 
 // Backend API URL - change this for production
-const API_URL = 'http://localhost:8000';
+const API_URL = 'http://127.0.0.1:8000';
 
 // ==================== Store ====================
 
@@ -81,7 +81,8 @@ export const useAuthStore = create<AuthState>()(
                     });
 
                     if (!response.ok) {
-                        throw new Error('Login failed');
+                        const errorData = await response.json();
+                        throw new Error(errorData.detail || 'Login failed');
                     }
 
                     const data = await response.json();
@@ -118,7 +119,8 @@ export const useAuthStore = create<AuthState>()(
                     });
 
                     if (!response.ok) {
-                        throw new Error('Registration failed');
+                        const errorData = await response.json();
+                        throw new Error(errorData.detail || 'Registration failed');
                     }
 
                     const data = await response.json();

@@ -6,11 +6,23 @@ services:
     container_name: influnce_ai_backend
     ports:
       - "8000:8000"
-    env_file:
-      - .env
+    volumes:
+      - ./backend:/app/backend
+    environment:
+      - DATABASE_URL=postgresql://neondb_owner:npg_i91fqJWvEFyx@ep-lingering-bird-a1svfhr7-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+      - REDIS_URL=redis://redis:6379/0
+      - FACEBOOK_APP_ID=${FACEBOOK_APP_ID}
+      - FACEBOOK_APP_SECRET=${FACEBOOK_APP_SECRET}
+      - INSTAGRAM_REDIRECT_URI=${INSTAGRAM_REDIRECT_URI}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - GOOGLE_REDIRECT_URI=${GOOGLE_REDIRECT_URI}
+      - TWITTER_CLIENT_ID=${TWITTER_CLIENT_ID}
+      - TWITTER_CLIENT_SECRET=${TWITTER_CLIENT_SECRET}
+      - TWITTER_REDIRECT_URI=${TWITTER_REDIRECT_URI}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
     depends_on:
-      postgres:
-        condition: service_healthy
+
       redis:
         condition: service_healthy
     restart: unless-stopped
@@ -27,7 +39,7 @@ services:
       - ./backend/db/init:/docker-entrypoint-initdb.d
       - influnce_ai_pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U influnce -d influnce_ai"]
+      test: [ "CMD-SHELL", "pg_isready -U influnce -d influnce_ai" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -40,7 +52,7 @@ services:
     volumes:
       - influnce_ai_redis_data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: [ "CMD", "redis-cli", "ping" ]
       interval: 10s
       timeout: 5s
       retries: 5
