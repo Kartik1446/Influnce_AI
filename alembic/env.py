@@ -9,6 +9,11 @@ from alembic import context
 # access to the values within the .ini file in use.
 config = context.config
 
+# Override sqlalchemy.url with DATABASE_URL from environment if available
+import os
+if os.environ.get("DATABASE_URL"):
+    config.set_main_option("sqlalchemy.url", os.environ.get("DATABASE_URL"))
+
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 if config.config_file_name is not None:
@@ -25,15 +30,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Import your Base model metadata
-# Import your Base model metadata
-from backend.app.core.database import Base
-# Import models to ensure they are registered with Base.metadata
-import backend.app.db.models
-import os
-
-# Set sqlalchemy.url from environment variable (loaded by importing database)
-if os.getenv("DATABASE_URL"):
-    config.set_main_option("sqlalchemy.url", os.getenv("DATABASE_URL"))
+from backend.app.db import Base
 
 target_metadata = Base.metadata
 
