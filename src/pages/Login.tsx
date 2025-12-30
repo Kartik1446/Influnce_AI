@@ -26,8 +26,8 @@ export default function Login() {
                 await register(username, email, password);
             }
             navigate('/dashboard');
-        } catch (err) {
-            setError(isLogin ? 'Invalid credentials' : 'Registration failed');
+        } catch (err: any) {
+            setError(err.message || (isLogin ? 'Invalid credentials' : 'Registration failed'));
         } finally {
             setLoading(false);
         }
